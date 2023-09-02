@@ -9,13 +9,14 @@ export class AuthController {
 
   @Post('signUp')
   SignUp(@Body() signUpDto: SignUpDto) {
-    return this.authService.create(signUpDto);
+    return this.authService.SignUp(signUpDto);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('signIn')
   SignIn(@Body() signInDto: SignInDto) {
-    return this.authService.create(signInDto);
+    return this.authService.SignIn(signInDto);
+    // return this.authService.create(signInDto);
   }
 
   // @Post()
