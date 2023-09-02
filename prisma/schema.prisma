@@ -18,8 +18,8 @@ model User {
   password         String
   pitch            String?
   about            String?
-  availability     Boolean
-  money            Int
+  availability     Boolean       @default(true)
+  money            Int           @default(0)
   createdProjects  Project[]     @relation("UserProjects")
   appliedProjects  Application[] @relation("UserApplications")
   reviewsGiven     Review[]      @relation("ReviewsGiven")
