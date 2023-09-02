@@ -32,18 +32,18 @@ model User {
 
 model Review {
   rating     Int
-  reviewer   User @relation("ReviewsGiven", fields: [reviewerId], references: [id])
+  reviewer   User @relation("ReviewsGiven", fields: [reviewerId], references: [id] , onDelete: Cascade)
   reviewerId Int
-  reviewee   User @relation("ReviewsReceived", fields: [revieweeId], references: [id])
+  reviewee   User @relation("ReviewsReceived", fields: [revieweeId], references: [id], onDelete: Cascade)
   revieweeId Int
 
   @@id([reviewerId, revieweeId])
 }
 
 model Rating {
-  rater       User       @relation("RatingsGiven", fields: [raterId], references: [id])
+  rater       User       @relation("RatingsGiven", fields: [raterId], references: [id], onDelete: Cascade)
   raterId     Int
-  receiver    User       @relation("RatingsReceived", fields: [receiverId], references: [id])
+  receiver    User       @relation("RatingsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId  Int
   type        RatingType // Enum for rating type
   ratingValue Int? // The actual rating value (optional)
@@ -60,14 +60,14 @@ enum RatingType {
 model Project {
   id             Int           @id @default(autoincrement())
   title          String
-  creator        User          @relation("UserProjects", fields: [creatorId], references: [id])
+  creator        User          @relation("UserProjects", fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId      Int
   description    String
   price          Int
   status         ProjectStatus
   rating         Int?
   appliedUsers   Application[] @relation("ProjectApplications")
-  assignedUser   User          @relation("assinedProjects", fields: [assignedUserId], references: [id])
+  assignedUser   User          @relation("assinedProjects", fields: [assignedUserId], references: [id], onDelete: Cascade)
   assignedUserId Int
 }
 
@@ -78,9 +78,9 @@ enum ProjectStatus {
 }
 
 model Application {
-  applicant   User    @relation("UserApplications", fields: [applicantId], references: [id])
+  applicant   User    @relation("UserApplications", fields: [applicantId], references: [id] ,onDelete: Cascade)
   applicantId Int
-  project     Project @relation("ProjectApplications", fields: [projectId], references: [id])
+  project     Project @relation("ProjectApplications", fields: [projectId], references: [id], onDelete: Cascade)
   projectId   Int
 
   @@id([applicantId, projectId])
