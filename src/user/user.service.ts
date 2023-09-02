@@ -11,11 +11,18 @@ export class UserService {
   }
 
   async findOne(userId: number) {
-    return await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
         id: userId,
       },
     });
+
+    if (user) {
+      delete user.password;
+      return user;
+    } else {
+      throw new ForbiddenException('User not found');
+    }
   }
 
   async update(userId: number, updateUserDto: UpdateUserDto) {
