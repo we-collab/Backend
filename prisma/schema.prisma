@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int           @id @default(autoincrement())
+  name             String
+  email            String        @unique
+  picture          String
+  password         String
+  pitch            String?
+  about            String?
+  experience       String?
+  availability     Boolean
+  money            Int
+  createdProjects  Project[]     @relation("UserProjects")
+  appliedProjects  Application[] @relation("UserApplications")
+  reviewsGiven     Review[]      @relation("ReviewsGiven")
+  reviewsReceived  Review[]      @relation("ReviewsReceived")
+  ratingsGiven     Rating[]      @relation("RatingsGiven")
+  ratingsReceived  Rating[]      @relation("RatingsReceived")
+  assignedProjects Project[]     @relation("assinedProjects")
+}
+
+model Review {
+  rating     Int
+  reviewer   User @relation("ReviewsGiven", fields: [reviewerId], references: [id])
+  reviewerId Int
+  reviewee   User @relation("ReviewsReceived", fields: [revieweeId], references: [id])
+  revieweeId Int
+
+  @@id([reviewerId, revieweeId])
+}
+
+model Rating {
+  rater       User       @relation("RatingsGiven", fields: [raterId], references: [id])
+  raterId     Int
+  receiver    User       @relation("RatingsReceived", fields: [receiverId], references: [id])
+  receiverId  Int
+  type        RatingType // Enum for rating type
+  ratingValue Int? // The actual rating value (optional)
+  description String? // Review description (optional)
+
+  @@id([raterId, receiverId])
+}
+
+enum RatingType {
+  STAR
+  THUMBS_UP_DOWN
+}
+
+model Project {
+  id             Int           @id @default(autoincrement())
+  title          String
+  creator        User          @relation("UserProjects", fields: [creatorId], references: [id])
+  creatorId      Int
+  description    String
+  price          Int
+  status         ProjectStatus
+  rating         Int?
+  appliedUsers   Application[] @relation("ProjectApplications")
+  assignedUser   User          @relation("assinedProjects", fields: [assignedUserId], references: [id])
+  assignedUserId Int
+}
+
+enum ProjectStatus {
+  ACTIVE
+  INACTIVE
+  COMPLETED
+}
+
+model Application {
+  applicant   User    @relation("UserApplications", fields: [applicantId], references: [id])
+  applicantId Int
+  project     Project @relation("ProjectApplications", fields: [projectId], references: [id])
+  projectId   Int
+
+  @@id([applicantId, projectId])
+}
