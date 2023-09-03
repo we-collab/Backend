@@ -20,7 +20,7 @@ export class AuthController {
   }
 
   // @Post()
-  // SignOut() {
-  //   return this.authService.create();
+  // SignOut(@GetUser() user: User) {
+  //   return this.authService.LogOut(user);
   // }
 }

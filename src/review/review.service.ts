@@ -16,24 +16,24 @@ export class ReviewService {
     });
   }
 
-  findAll(userId: number) {
-    return this.prisma.review.findMany({
+  async findAll(userId: number) {
+    return await this.prisma.review.findMany({
       where: {
         revieweeId: userId,
       },
     });
   }
 
-  findOne(id: number) {
-    return this.prisma.review.findUnique({
+  async findOne(id: number) {
+    return await this.prisma.review.findUnique({
       where: {
         id: id,
       },
     });
   }
 
-  update(id: number, updateReviewDto: UpdateReviewDto) {
-    return this.prisma.review.update({
+  async update(id: number, updateReviewDto: UpdateReviewDto) {
+    return await this.prisma.review.update({
       where: {
         id: id,
       },
