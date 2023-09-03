@@ -1,4 +1,17 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateProjectDto } from './create-project.dto';
+import { ProjectStatus } from '@prisma/client';
+import { IsString, IsInt, IsEnum, IsOptional } from 'class-validator';
 
-export class UpdateProjectDto extends PartialType(CreateProjectDto) {}
+export class UpdateProjectDto {
+  @IsString()
+  @IsOptional()
+  title;
+  @IsString()
+  @IsOptional()
+  description;
+  @IsInt()
+  @IsOptional()
+  price;
+  @IsEnum(ProjectStatus)
+  @IsOptional()
+  status;
+}

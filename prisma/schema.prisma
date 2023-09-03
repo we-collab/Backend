@@ -56,11 +56,10 @@ model Project {
   creatorId      Int
   description    String
   price          Int
-  status         ProjectStatus
-  rating         Int?
+  status         ProjectStatus? @default(INACTIVE)
   appliedUsers   Application[] @relation("ProjectApplications")
-  assignedUser   User          @relation("assinedProjects", fields: [assignedUserId], references: [id], onDelete: Cascade)
-  assignedUserId Int
+  assignedUser   User?          @relation("assinedProjects", fields: [assignedUserId], references: [id], onDelete: Cascade)
+  assignedUserId Int?
 }
 
 enum ProjectStatus {
