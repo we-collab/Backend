@@ -22,7 +22,6 @@ export class AuthService {
           name: signUpDto.name,
           email: signUpDto.email,
           password: hash,
-          picture: signUpDto.picture,
           availability: true, // Add the availability field
           money: 0,
         },
