@@ -30,34 +30,32 @@ model User {
 }
 
 model Review {
+  id         Int    @id @default(autoincrement())
   review     String
   reviewer   User   @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
   reviewerId Int
   reviewee   User   @relation("ReviewsReceived", fields: [revieweeId], references: [id], onDelete: Cascade)
   revieweeId Int
-
-  @@id([reviewerId, revieweeId])
 }
 
 model Rating {
+  id          Int  @id @default(autoincrement())
   rater       User @relation("RatingsGiven", fields: [raterId], references: [id], onDelete: Cascade)
   raterId     Int
   receiver    User @relation("RatingsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId  Int // Enum for rating type
   ratingValue Int? @default(0) // The actual rating value (optional)
-
-  @@id([raterId, receiverId])
 }
 
 model Project {
-  id             Int           @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   title          String
-  creator        User          @relation("UserProjects", fields: [creatorId], references: [id], onDelete: Cascade)
+  creator        User           @relation("UserProjects", fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId      Int
   description    String
   price          Int
   status         ProjectStatus? @default(INACTIVE)
-  appliedUsers   Application[] @relation("ProjectApplications")
+  appliedUsers   Application[]  @relation("ProjectApplications")
   assignedUser   User?          @relation("assinedProjects", fields: [assignedUserId], references: [id], onDelete: Cascade)
   assignedUserId Int?
 }
@@ -69,10 +67,9 @@ enum ProjectStatus {
 }
 
 model Application {
+  id          Int     @id @default(autoincrement())
   applicant   User    @relation("UserApplications", fields: [applicantId], references: [id], onDelete: Cascade)
   applicantId Int
   project     Project @relation("ProjectApplications", fields: [projectId], references: [id], onDelete: Cascade)
   projectId   Int
-
-  @@id([applicantId, projectId])
 }

@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { ProjectService } from 'src/project/project.service';
 
 @Injectable()
 export class ApplicationService {
-  create(createApplicationDto: CreateApplicationDto) {
-    return 'This action adds a new application';
+  constructor(
+    private prisma: PrismaService,
+    private projectService: ProjectService,
+  ) {}
+
+  async create(applicantId: number, projectId: number) {
+    const project = await this.projectService.findOne(projectId);
+    if (project) {
+      return await this.prisma.application.create({
+        data: {
+          applicantId: applicantId,
+          projectId: projectId,
+        },
+      });
+    } else {
+      throw new NotFoundException('Project not found');
+    }
   }
 
-  findAll() {
-    return `This action returns all application`;
+  async findAll(projectId: number) {
+    return await this.prisma.application.findMany({
+      where: {
+        projectId: projectId,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} application`;
+  async findOne(id: number) {
+    return await this.prisma.application.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
 
-  update(id: number, updateApplicationDto: UpdateApplicationDto) {
-    return `This action updates a #${id} application`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} application`;
+  async remove(id: number) {
+    return await this.prisma.application.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }
