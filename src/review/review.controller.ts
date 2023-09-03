@@ -1,20 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
+import { GetUser } from 'src/auth/decorator/get_user.decorator';
+import { User } from '@prisma/client';
 
 @Controller('review')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
   @Post()
-  create(@Body() createReviewDto: CreateReviewDto) {
-    return this.reviewService.create(createReviewDto);
+  create(@GetUser() user: User, @Body() createReviewDto: CreateReviewDto) {
+    return this.reviewService.create(user.id, createReviewDto);
   }
 
   @Get()
-  findAll() {
-    return this.reviewService.findAll();
+  findAll(@GetUser() user: User) {
+    return this.reviewService.findAll(user.id);
   }
 
   @Get(':id')
