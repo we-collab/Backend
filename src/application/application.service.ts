@@ -1,17 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ProjectService } from 'src/project/project.service';
 
 @Injectable()
 export class ApplicationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private projectService: ProjectService,
+  ) {}
 
   async create(applicantId: number, projectId: number) {
-    return await this.prisma.application.create({
-      data: {
-        applicantId: applicantId,
-        projectId: projectId,
-      },
-    });
+    const project = await this.projectService.findOne(projectId);
+    if (project) {
+      return await this.prisma.application.create({
+        data: {
+          applicantId: applicantId,
+          projectId: projectId,
+        },
+      });
+    } else {
+      throw new NotFoundException('Project not found');
+    }
   }
 
   async findAll(projectId: number) {
