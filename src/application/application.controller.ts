@@ -1,30 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { ApplicationService } from './application.service';
-import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
+import { LocalAuthGuard } from 'src/auth/guard/jwtAuth.guard';
+import { GetUser } from 'src/auth/decorator/get_user.decorator';
+import { User } from '@prisma/client';
 
+@UseGuards(LocalAuthGuard)
 @Controller('application')
 export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) {}
 
-  @Post()
-  create(@Body() createApplicationDto: CreateApplicationDto) {
-    return this.applicationService.create(createApplicationDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.applicationService.findAll();
+  @Post(':id')
+  apply(@GetUser() user: User, @Param('id') projectId: string) {
+    return this.applicationService.create(user.id, +projectId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.applicationService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateApplicationDto: UpdateApplicationDto) {
-    return this.applicationService.update(+id, updateApplicationDto);
+  findAll(@Param('id') projectId: string) {
+    return this.applicationService.findAll(+projectId);
   }
 
   @Delete(':id')

@@ -1,26 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ApplicationService {
-  create(createApplicationDto: CreateApplicationDto) {
-    return 'This action adds a new application';
+  constructor(private prisma: PrismaService) {}
+
+  async create(applicantId: number, projectId: number) {
+    return await this.prisma.application.create({
+      data: {
+        applicantId: applicantId,
+        projectId: projectId,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all application`;
+  async findAll(projectId: number) {
+    return await this.prisma.application.findMany({
+      where: {
+        projectId: projectId,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} application`;
+  async findOne(id: number) {
+    return await this.prisma.application.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
 
-  update(id: number, updateApplicationDto: UpdateApplicationDto) {
-    return `This action updates a #${id} application`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} application`;
+  async remove(id: number) {
+    return await this.prisma.application.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }
