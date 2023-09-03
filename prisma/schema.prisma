@@ -30,23 +30,21 @@ model User {
 }
 
 model Review {
+  id         Int    @id @default(autoincrement())
   review     String
   reviewer   User   @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
   reviewerId Int
   reviewee   User   @relation("ReviewsReceived", fields: [revieweeId], references: [id], onDelete: Cascade)
   revieweeId Int
-
-  @@id([reviewerId, revieweeId])
 }
 
 model Rating {
+  id          Int  @id @default(autoincrement())
   rater       User @relation("RatingsGiven", fields: [raterId], references: [id], onDelete: Cascade)
   raterId     Int
   receiver    User @relation("RatingsReceived", fields: [receiverId], references: [id], onDelete: Cascade)
   receiverId  Int // Enum for rating type
   ratingValue Int? @default(0) // The actual rating value (optional)
-
-  @@id([raterId, receiverId])
 }
 
 model Project {
