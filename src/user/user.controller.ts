@@ -19,26 +19,25 @@ import { User } from '@prisma/client';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
-@UseGuards(LocalAuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
+  @UseGuards(LocalAuthGuard)
   @Get('profile')
   getProfile(@GetUser() user: User) {
     return user;
   }
-
+  @UseGuards(LocalAuthGuard)
   @Get()
   findAll() {
     return this.userService.findAll();
   }
-
+  @UseGuards(LocalAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }
-
+  @UseGuards(LocalAuthGuard)
   @Patch(':id')
   @UseInterceptors(
     FileInterceptor('file', {
@@ -88,15 +87,10 @@ export class UserController {
     @GetUser() user: User,
     @Res() res,
   ) {
-    if (
-      user.picture === `http://localhost:3000/user/profile/picutres/${image}`
-    ) {
-      return await res.sendFile(image, { root: './uploads' });
-    } else {
-      return 'image';
-    }
+    return await res.sendFile(image, { root: './uploads' });
   }
 
+  @UseGuards(LocalAuthGuard)
   @Delete(':id')
   remove(@GetUser() user: User, @Param('id') id: string) {
     if (user.id === +id) {

@@ -84,11 +84,7 @@ export class ProjectController {
     @Body() assignedTo: string,
   ) {
     console.log(assignedTo['assignedTo']);
-    return this.projectService.assign(
-      user.id,
-      Int.parse(id),
-      +assignedTo['assignedTo'],
-    );
+    return this.projectService.assign(user.id, +id, +assignedTo['assignedTo']);
   }
 
   // to unassign a project from a user
